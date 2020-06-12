@@ -31,7 +31,6 @@ import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ResourceUtils;
 
 import com.compras.supermercados.exceptions.QRException;
 import com.google.zxing.BarcodeFormat;
@@ -247,7 +246,7 @@ public class GenerarQR
 	{
 		try {
 			File codigoQR = new File(numeroTransaccion.concat(ConstantesQR.WALMART));
-			File logo = new File(ResourceUtils.getFile("classpath:".concat(ConstantesQR.WALMART_LOGO)).toURI());
+			File logo=new File(ConstantesQR.WALMART_LOGO);
 			QRCodeWriter writer = new QRCodeWriter();
 			
 			BitMatrix matrix = writer.encode(infoCodigoQR, BarcodeFormat.QR_CODE, 1200, 1200);
