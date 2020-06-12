@@ -64,11 +64,11 @@ public class QRView extends JFrame
 	private void etiquetas()
 	{
 		JLabel labelMonto = new JLabel("Monto");
-		labelMonto.setBounds(75, 30, 45, 15);
+		labelMonto.setBounds(78, 30, 45, 15);
 		getContentPane().add(labelMonto);
 		
 		JLabel idSubsidiaria = new JLabel("Id Subsidiaria");
-		idSubsidiaria.setBounds(33, 60, 100, 15);
+		idSubsidiaria.setBounds(26, 60, 100, 15);
 		getContentPane().add(idSubsidiaria);
 		
 		JLabel idTienda = new JLabel("Id Tienda");
@@ -80,7 +80,7 @@ public class QRView extends JFrame
 		getContentPane().add(idCajero);
 		
 		JLabel labelCajero = new JLabel("Nombre cajero");
-		labelCajero.setBounds(26, 150, 120, 15);
+		labelCajero.setBounds(19, 150, 110, 15);
 		getContentPane().add(labelCajero);
 		
 		JLabel idCaja = new JLabel("Id Caja");
@@ -88,7 +88,7 @@ public class QRView extends JFrame
 		getContentPane().add(idCaja);
 		
 		JLabel ruta = new JLabel("Archivo creado");
-		ruta.setBounds(24, 210, 110, 15);
+		ruta.setBounds(18, 210, 110, 15);
 		getContentPane().add(ruta);
 	}
 	
@@ -118,7 +118,7 @@ public class QRView extends JFrame
 		idCajero.setColumns(10);
 		
 		cajero = new JTextField();
-		cajero.setBounds(144, 148, 114, 19);
+		cajero.setBounds(144, 148, 250, 19);
 		getContentPane().add(cajero);
 		cajero.setColumns(10);
 		
@@ -255,14 +255,14 @@ public class QRView extends JFrame
 				try {
 					validarInformacionQR();
 					GenerarQR.esMontoValido(monto.getText());
-					String numeroTransaccion=GenerarQR.generarCodigoQR(monto.getText(), subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText(), idCaja.getText());
+					String numeroTransaccion=GenerarQR.generarCodigoQR(monto.getText(), subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText().toUpperCase(), idCaja.getText());
 					cargarQR(numeroTransaccion);
 				}catch(QRException qre) {
 					JOptionPane.showMessageDialog(null, qre.getMensajeError(), ConstantesQR.ERROR_DIALOGO, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		botonGenerarQR.setBounds(60, 250, 160, 25);
+		botonGenerarQR.setBounds(144, 250, 160, 25);
 		getContentPane().add(botonGenerarQR);
 	}
 	
@@ -279,7 +279,7 @@ public class QRView extends JFrame
 	/**
 	 * Metodo para cargar la imagen al label
 	 */
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unused" })
 	private void cargarQR(String numeroTransaccion)
 	{
 		String nombreArchivoQR=numeroTransaccion.concat(ConstantesQR.WALMART);
@@ -287,7 +287,7 @@ public class QRView extends JFrame
 		try {
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			BufferedImage img = ImageIO.read(new File(nombreArchivoQR).toURL());
-			ImageIcon icon = new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(screenSize.width/3, screenSize.height/2, Image.SCALE_DEFAULT));
+			ImageIcon icon = new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(450, 450, Image.SCALE_DEFAULT));
 			JLabel imagen = new JLabel(icon);
 			File codigoQR = new File(nombreArchivoQR);
 			archivo.setText(codigoQR.getAbsolutePath());
