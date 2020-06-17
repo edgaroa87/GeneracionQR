@@ -255,7 +255,8 @@ public class QRView extends JFrame
 				try {
 					validarInformacionQR();
 					GenerarQR.esMontoValido(monto.getText());
-					String numeroTransaccion=GenerarQR.generarCodigoQR(monto.getText(), subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText().toUpperCase(), idCaja.getText());
+					String nuevoMonto=String.format("%.2f", Double.valueOf(monto.getText())).replace(",", ".");
+					String numeroTransaccion=GenerarQR.generarCodigoQR(nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText().toUpperCase(), idCaja.getText());
 					cargarQR(numeroTransaccion);
 				}catch(QRException qre) {
 					JOptionPane.showMessageDialog(null, qre.getMensajeError(), ConstantesQR.ERROR_DIALOGO, JOptionPane.ERROR_MESSAGE);
