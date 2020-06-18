@@ -264,22 +264,37 @@ public class QRView extends JFrame
 		botonGenerarQR = new JButton("Generar QR");
 		botonGenerarQR.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-				try {
-					LOG.info("Validando informacion para QR...");
-					validarInformacionQR();
-					generarQR.esMontoValido(monto.getText());
-					String nuevoMonto=String.format("%.2f", Double.valueOf(monto.getText())).replace(",", ".");
-					String numeroTransaccion=generarQR.generarCodigoQR(nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText().toUpperCase(), idCaja.getText());
-					cargarQR(numeroTransaccion);
-				}catch(QRException qre) {
-					JOptionPane.showMessageDialog(null, qre.getMensajeError(), ConstantesQR.ERROR_DIALOGO, JOptionPane.ERROR_MESSAGE);
-				}
+			public void mouseClicked(MouseEvent e){
+				generarQR();
+			}
+		});
+		botonGenerarQR.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+			    	generarQR();
+			    }
 			}
 		});
 		botonGenerarQR.setBounds(144, 250, 160, 25);
 		getContentPane().add(botonGenerarQR);
+	}
+	
+	/**
+	 * Metodo para generar el codigo QR
+	 */
+	private void generarQR()
+	{
+		try {
+			LOG.info("Validando informacion para QR...");
+			validarInformacionQR();
+			generarQR.esMontoValido(monto.getText());
+			String nuevoMonto=String.format("%.2f", Double.valueOf(monto.getText())).replace(",", ".");
+			String numeroTransaccion=generarQR.generarCodigoQR(nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText().toUpperCase(), idCaja.getText());
+			cargarQR(numeroTransaccion);
+		}catch(QRException qre) {
+			JOptionPane.showMessageDialog(null, qre.getMensajeError(), ConstantesQR.ERROR_DIALOGO, JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	/**
