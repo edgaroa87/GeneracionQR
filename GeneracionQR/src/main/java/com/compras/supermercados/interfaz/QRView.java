@@ -19,13 +19,24 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.compras.supermercados.exceptions.QRException;
 import com.compras.supermercados.qr.ConstantesQR;
 import com.compras.supermercados.qr.GenerarQR;
 
+@Component
 public class QRView extends JFrame
 {
+	private static final Logger LOG=LoggerFactory.getLogger(QRView.class);
+	
 	private static final long serialVersionUID = 628637494855902878L;
+	
+	@Autowired
+	private GenerarQR generarQR;
 	
 	private JButton botonGenerarQR;
 	
@@ -146,7 +157,7 @@ public class QRView extends JFrame
 				if(monto.getText().length()==10)
 					ke.consume();
 				char c=ke.getKeyChar();
-				if(!(GenerarQR.esNumero(String.valueOf(c)) || c==ke.VK_PERIOD || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
+				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_PERIOD || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
 			}
 		});
@@ -164,7 +175,7 @@ public class QRView extends JFrame
 				if(subsidiaria.getText().length()==5)
 					ke.consume();
 				char c=ke.getKeyChar();
-				if(!(GenerarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
+				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
 			}
 		});
@@ -182,7 +193,7 @@ public class QRView extends JFrame
 				if(tienda.getText().length()==5)
 					ke.consume();
 				char c=ke.getKeyChar();
-				if(!(GenerarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
+				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
 			}
 		});
@@ -200,7 +211,7 @@ public class QRView extends JFrame
 				if(idCajero.getText().length()==5)
 					ke.consume();
 				char c=ke.getKeyChar();
-				if(!(GenerarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
+				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
 			}
 		});
@@ -218,7 +229,7 @@ public class QRView extends JFrame
 				if(cajero.getText().length()==40)
 					ke.consume();
 				char c=ke.getKeyChar();
-				if(!(GenerarQR.soloTexto(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE || c==ke.VK_SPACE))
+				if(!(generarQR.soloTexto(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE || c==ke.VK_SPACE))
 					ke.consume();
 			}
 		});
@@ -236,7 +247,7 @@ public class QRView extends JFrame
 				if(idCaja.getText().length()==5)
 					ke.consume();
 				char c=ke.getKeyChar();
-				if(!(GenerarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
+				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
 			}
 		});
@@ -254,9 +265,9 @@ public class QRView extends JFrame
 			{
 				try {
 					validarInformacionQR();
-					GenerarQR.esMontoValido(monto.getText());
+					generarQR.esMontoValido(monto.getText());
 					String nuevoMonto=String.format("%.2f", Double.valueOf(monto.getText())).replace(",", ".");
-					String numeroTransaccion=GenerarQR.generarCodigoQR(nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText().toUpperCase(), idCaja.getText());
+					String numeroTransaccion=generarQR.generarCodigoQR(nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText().toUpperCase(), idCaja.getText());
 					cargarQR(numeroTransaccion);
 				}catch(QRException qre) {
 					JOptionPane.showMessageDialog(null, qre.getMensajeError(), ConstantesQR.ERROR_DIALOGO, JOptionPane.ERROR_MESSAGE);
@@ -273,7 +284,7 @@ public class QRView extends JFrame
 	 */
 	private void validarInformacionQR() throws QRException
 	{
-		if(GenerarQR.esNuloVacio(monto.getText()) || GenerarQR.esNuloVacio(subsidiaria.getText()) || GenerarQR.esNuloVacio(tienda.getText()) || GenerarQR.esNuloVacio(idCajero.getText()) || GenerarQR.esNuloVacio(cajero.getText()) || GenerarQR.esNuloVacio(idCaja.getText()))
+		if(generarQR.esNuloVacio(monto.getText()) || generarQR.esNuloVacio(subsidiaria.getText()) || generarQR.esNuloVacio(tienda.getText()) || generarQR.esNuloVacio(idCajero.getText()) || generarQR.esNuloVacio(cajero.getText()) || generarQR.esNuloVacio(idCaja.getText()))
 			throw new QRException("Complete la informaci\u00f3n para la generaci\u00f3n del c\u00f3digo QR.");
 	}
 	
@@ -294,7 +305,7 @@ public class QRView extends JFrame
 			archivo.setText(codigoQR.getAbsolutePath());
 			JOptionPane.showMessageDialog(null, imagen);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error(generarQR.obtenerTrazaError(e));
 		}
 	}
 }

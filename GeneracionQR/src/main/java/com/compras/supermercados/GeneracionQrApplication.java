@@ -2,9 +2,9 @@ package com.compras.supermercados;
 
 import java.awt.EventQueue;
 
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import com.compras.supermercados.interfaz.QRView;
 
@@ -13,18 +13,13 @@ public class GeneracionQrApplication
 {
 	public static void main(String[] args)
 	{
-		new SpringApplicationBuilder(GeneracionQrApplication.class).headless(false).web(WebApplicationType.NONE).run(args);
+		ConfigurableApplicationContext applicationContext=new SpringApplicationBuilder(GeneracionQrApplication.class)
+																.headless(false)
+																.run(args);
 		
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run() {
-				try {
-					QRView frame = new QRView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+		EventQueue.invokeLater(() ->{
+			QRView qrView=applicationContext.getBean(QRView.class);
+			qrView.setVisible(true);
 		});
 	}
 }

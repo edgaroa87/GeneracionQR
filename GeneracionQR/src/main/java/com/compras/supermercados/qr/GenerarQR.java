@@ -31,6 +31,8 @@ import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 
 import com.compras.supermercados.exceptions.QRException;
 import com.google.zxing.BarcodeFormat;
@@ -40,6 +42,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+@Component
 public class GenerarQR
 {
 	private static final Logger LOG=LoggerFactory.getLogger(GenerarQR.class);
@@ -55,7 +58,7 @@ public class GenerarQR
 	 * @return String
 	 * @throws QRException
 	 */
-	public static String generarCodigoQR(String monto, String idSubsidiaria, String idTienda, String idCajero, String nombreCajero, String idCaja) throws QRException
+	public String generarCodigoQR(String monto, String idSubsidiaria, String idTienda, String idCajero, String nombreCajero, String idCaja) throws QRException
 	{
 		StringBuilder infoCodigoQR=new StringBuilder();
 		
@@ -91,7 +94,7 @@ public class GenerarQR
 	 * @param informacion
 	 * @return boolean
 	 */
-	public static boolean esNumero(String informacion)
+	public boolean esNumero(String informacion)
 	{
 		return Pattern.matches("\\d*", informacion);
 	}
@@ -101,7 +104,7 @@ public class GenerarQR
 	 * @param texto
 	 * @return boolean
 	 */
-	public static boolean soloTexto(String texto)
+	public boolean soloTexto(String texto)
 	{
 		return Pattern.matches("[a-zA-z]", texto);
 	}
@@ -110,7 +113,7 @@ public class GenerarQR
 	 * Metodo para validar que el campo no sea nulo o vacio
 	 * @return boolean
 	 */
-	public static boolean esNuloVacio(String informacion)
+	public boolean esNuloVacio(String informacion)
 	{
 		if(informacion==null || informacion.trim().isEmpty())
 			return true;
@@ -124,7 +127,7 @@ public class GenerarQR
 	 * @return boolean
 	 * @throws QRException
 	 */
-	public static boolean esMontoValido(String informacion) throws QRException
+	public boolean esMontoValido(String informacion) throws QRException
 	{
 		try {
 	        Double.parseDouble(informacion);
@@ -140,7 +143,7 @@ public class GenerarQR
 	 * @return String
 	 */
 	@SuppressWarnings("rawtypes")
-	private static String generarReferencia(int posiciones)
+	private String generarReferencia(int posiciones)
 	{
 		StringBuilder aleatorio=new StringBuilder();
 		Random random = new Random();
@@ -163,7 +166,7 @@ public class GenerarQR
 	 * @return String
 	 * @throws QRException 
 	 */
-	private static String crearHash(String referenciaUnica, String monto, String idSucursal, String numeroTransaccion) throws QRException
+	private String crearHash(String referenciaUnica, String monto, String idSucursal, String numeroTransaccion) throws QRException
 	{
 		StringBuilder hash=new StringBuilder();
 		
@@ -176,7 +179,7 @@ public class GenerarQR
 			byte[] hashByte = digest.digest(String.valueOf(hash).getBytes(StandardCharsets.UTF_8));
 			return Base64.getEncoder().encodeToString(hashByte);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			LOG.error(obtenerTrazaError(e));
 			throw new QRException("No fue posible obtener el valos Hash.");
 		}
 	}
@@ -188,7 +191,7 @@ public class GenerarQR
 	 * @return String
 	 * @throws QRException
 	 */
-	private static String cifraReferenciaUnica(String referenciaUnica, String numeroTransaccion) throws QRException
+	private String cifraReferenciaUnica(String referenciaUnica, String numeroTransaccion) throws QRException
 	{
 		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO.concat(numeroTransaccion);
 		
@@ -204,7 +207,7 @@ public class GenerarQR
 	        
 	        return java.util.Base64.getEncoder().encodeToString(cipher.doFinal(referenciaUnica.getBytes(StandardCharsets.UTF_8)));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
-			e.printStackTrace();
+			LOG.error(obtenerTrazaError(e));
 			throw new QRException("Error al cifrar la referencia unica.");
 		}
 	}
@@ -213,9 +216,9 @@ public class GenerarQR
 	 * Metodo para descifrar la referencia unica
 	 * @param textoCifrado
 	 * @param numeroTransaccion
-
+	 * @throws QRException 
 	 */
-	private static void descifraReferenciaUnica(String textoCifrado, String numeroTransaccion)
+	private void descifraReferenciaUnica(String textoCifrado, String numeroTransaccion) throws QRException
 	{
 		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO.concat(numeroTransaccion);
 		
@@ -231,7 +234,8 @@ public class GenerarQR
 	        
 	        LOG.info("Referencia unica descifrada: "+new String(cipher.doFinal(java.util.Base64.getDecoder().decode(textoCifrado)), StandardCharsets.UTF_8));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
-			e.printStackTrace();
+			LOG.error(obtenerTrazaError(e));
+			throw new QRException("Error al descifrar la referencia unica.");
 		}
 	}
 	
@@ -241,12 +245,11 @@ public class GenerarQR
 	 * @param numeroTransaccion
 	 * @throws QRException 
 	 */
-	@SuppressWarnings("deprecation")
-	private static void crearArchivoQR(String infoCodigoQR, String numeroTransaccion) throws QRException
+	private void crearArchivoQR(String infoCodigoQR, String numeroTransaccion) throws QRException
 	{
 		try {
 			File codigoQR = new File(numeroTransaccion.concat(ConstantesQR.WALMART));
-			File logo=new File(ConstantesQR.WALMART_LOGO);
+			ClassPathResource resource=new ClassPathResource(ConstantesQR.WALMART_LOGO);
 			QRCodeWriter writer = new QRCodeWriter();
 			
 			BitMatrix matrix = writer.encode(infoCodigoQR, BarcodeFormat.QR_CODE, 1200, 1200);
@@ -254,7 +257,7 @@ public class GenerarQR
 
 		    BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(matrix, config);
 		    
-		    BufferedImage logoImage = ImageIO.read(logo.toURL());
+		    BufferedImage logoImage = ImageIO.read(resource.getInputStream());
 		    
 		    int deltaHeight = qrImage.getHeight() - logoImage.getHeight();
 		    int deltaWidth = qrImage.getWidth() - logoImage.getWidth();
@@ -270,11 +273,42 @@ public class GenerarQR
 			ImageIO.write(combined, ConstantesQR.EXTENSION_QR, codigoQR);
 			LOG.info("QR guardado en:              {}", codigoQR.getAbsolutePath());
 		}catch(WriterException e) {
-			e.printStackTrace();
+			LOG.error(obtenerTrazaError(e));
 			throw new QRException("Error al crear el archivo para el codigo QR.");
 		}catch(IOException e) {
-			e.printStackTrace();
+			LOG.error(obtenerTrazaError(e));
+			throw new QRException("Error al crear el archivo para el codigo QR.");
+		}catch(RuntimeException e) {
+			LOG.error(obtenerTrazaError(e));
 			throw new QRException("Error al crear el archivo para el codigo QR.");
 		}
+	}
+	
+    /**
+     * @param e
+     * @return String
+     */
+    public String obtenerTrazaError(Throwable e)
+	{
+		if (e == null)
+			return "No hay informacion en la excepcion";
+		StringBuilder sb = new StringBuilder();
+		for (StackTraceElement element : e.getStackTrace()) {
+			sb.append("\t at ").append(element.toString());
+			sb.append("\n");
+		}
+		Throwable exTemp = e;
+		while (exTemp.getCause() != null) {
+			exTemp = exTemp.getCause();
+			sb.append(" Caused by ");
+			sb.append(exTemp.toString());
+			sb.append("\n");
+			for (StackTraceElement element : exTemp.getStackTrace()) {
+				sb.append("\tat ");
+				sb.append(element.toString());
+				sb.append("\n");
+			}
+		}
+		return e.toString() + "\n" + sb.toString();
 	}
 }
