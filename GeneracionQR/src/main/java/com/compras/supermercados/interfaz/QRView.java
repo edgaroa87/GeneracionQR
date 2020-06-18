@@ -163,6 +163,13 @@ public class QRView extends JFrame
 				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_PERIOD || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
 			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+			    	generarQR();
+			    }
+			}
 		});
 	}
 	
@@ -180,6 +187,13 @@ public class QRView extends JFrame
 				char c=ke.getKeyChar();
 				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+			    	generarQR();
+			    }
 			}
 		});
 	}
@@ -199,6 +213,13 @@ public class QRView extends JFrame
 				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
 			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+			    	generarQR();
+			    }
+			}
 		});
 	}
 	
@@ -216,6 +237,13 @@ public class QRView extends JFrame
 				char c=ke.getKeyChar();
 				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+			    	generarQR();
+			    }
 			}
 		});
 	}
@@ -235,6 +263,13 @@ public class QRView extends JFrame
 				if(!(generarQR.soloTexto(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE || c==ke.VK_SPACE))
 					ke.consume();
 			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+			    	generarQR();
+			    }
+			}
 		});
 	}
 	
@@ -252,6 +287,13 @@ public class QRView extends JFrame
 				char c=ke.getKeyChar();
 				if(!(generarQR.esNumero(String.valueOf(c)) || c==ke.VK_DELETE || c==ke.VK_BACK_SPACE))
 					ke.consume();
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+			    	generarQR();
+			    }
 			}
 		});
 	}
