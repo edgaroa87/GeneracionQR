@@ -82,7 +82,7 @@ public class GenerarQR
 		infoCodigoQR.append(numeroTransaccion).append("|");
 		infoCodigoQR.append(hash);
 		
-		LOG.info("Informacion Codigo QR:       {}", String.valueOf(infoCodigoQR));
+		LOG.info("Informacion Codigo QR... {}", String.valueOf(infoCodigoQR));
 		
 		crearArchivoQR(String.valueOf(infoCodigoQR), numeroTransaccion);
 		
@@ -196,7 +196,7 @@ public class GenerarQR
 		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO.concat(numeroTransaccion);
 		
 		try {
-			LOG.info("Referencia unica a cifrar:   {}", referenciaUnica);
+			LOG.info("Referencia unica a cifrar... {}", referenciaUnica);
 			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ConstantesQR.ALGORITMO_SHA);
 	        KeySpec keySpec = new PBEKeySpec(nuevaLlave.toCharArray(), nuevaLlave.getBytes(), 65536, 256);
 	        SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
@@ -223,7 +223,7 @@ public class GenerarQR
 		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO.concat(numeroTransaccion);
 		
 		try {
-			LOG.info("Antes de descifrar:          {}", textoCifrado);
+			LOG.info("Antes de descifrar... {}", textoCifrado);
 	        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ConstantesQR.ALGORITMO_SHA);
 	        KeySpec keySpen = new PBEKeySpec(nuevaLlave.toCharArray(), nuevaLlave.getBytes(), 65536, 256);
 	        SecretKey secretKey = secretKeyFactory.generateSecret(keySpen);
@@ -232,7 +232,7 @@ public class GenerarQR
 	        Cipher cipher = Cipher.getInstance(ConstantesQR.ALGORITMO_PADDING);
 	        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(nuevaLlave.getBytes()));
 	        
-	        LOG.info("Referencia unica descifrada: "+new String(cipher.doFinal(java.util.Base64.getDecoder().decode(textoCifrado)), StandardCharsets.UTF_8));
+	        LOG.info("Referencia unica descifrada... "+new String(cipher.doFinal(java.util.Base64.getDecoder().decode(textoCifrado)), StandardCharsets.UTF_8));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 			LOG.error(obtenerTrazaError(e));
 			throw new QRException("Error al descifrar la referencia unica.");
@@ -271,7 +271,7 @@ public class GenerarQR
 		    g.drawImage(logoImage, (int) Math.round(deltaWidth / 2), (int) Math.round(deltaHeight / 2), null);
 
 			ImageIO.write(combined, ConstantesQR.EXTENSION_QR, codigoQR);
-			LOG.info("QR guardado en:              {}", codigoQR.getAbsolutePath());
+			LOG.info("QR guardado en... {}", codigoQR.getAbsolutePath());
 		}catch(WriterException e) {
 			LOG.error(obtenerTrazaError(e));
 			throw new QRException("Error al crear el archivo para el codigo QR.");

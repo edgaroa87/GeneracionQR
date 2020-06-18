@@ -52,6 +52,7 @@ public class QRView extends JFrame
 	 * Create the frame.
 	 */
 	public QRView() {
+		LOG.info("Cargando Frame...");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setBounds(0, 0, 550, 320);
@@ -74,6 +75,7 @@ public class QRView extends JFrame
 	 */
 	private void etiquetas()
 	{
+		LOG.info("Cargando labels...");
 		JLabel labelMonto = new JLabel("Monto");
 		labelMonto.setBounds(78, 30, 45, 15);
 		getContentPane().add(labelMonto);
@@ -108,6 +110,7 @@ public class QRView extends JFrame
 	 */
 	private void cargarTextFields()
 	{
+		LOG.info("Cargando text fileds...");
 		monto = new JTextField();
 		monto.setBounds(144, 28, 114, 19);
 		getContentPane().add(monto);
@@ -264,6 +267,7 @@ public class QRView extends JFrame
 			public void mouseClicked(MouseEvent e)
 			{
 				try {
+					LOG.info("Validando informacion para QR...");
 					validarInformacionQR();
 					generarQR.esMontoValido(monto.getText());
 					String nuevoMonto=String.format("%.2f", Double.valueOf(monto.getText())).replace(",", ".");
@@ -297,6 +301,7 @@ public class QRView extends JFrame
 		String nombreArchivoQR=numeroTransaccion.concat(ConstantesQR.WALMART);
 		
 		try {
+			LOG.info("Cargando QR generado...");
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			BufferedImage img = ImageIO.read(new File(nombreArchivoQR).toURL());
 			ImageIcon icon = new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(450, 450, Image.SCALE_DEFAULT));
