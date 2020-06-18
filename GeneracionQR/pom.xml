@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.compras.supermercados</groupId>
 	<artifactId>GeneracionQR</artifactId>
-	<version>0.0.4-RELEASE</version>
+	<version>0.0.5-RELEASE</version>
 	<name>GeneracionQR</name>
 	<description>Aplicación para la generación de códigos QR Walmart</description>
 

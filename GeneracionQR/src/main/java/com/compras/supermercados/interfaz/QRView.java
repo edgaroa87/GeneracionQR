@@ -72,6 +72,7 @@ public class QRView extends JFrame
 		cargarListenersIdCajero();
 		cargarListenersCajero();
 		cargarListenersIdCaja();
+		cargarListenersArchivo();
 		botonGenerarQR();
 	}
 	
@@ -320,6 +321,18 @@ public class QRView extends JFrame
 					ke.consume();
 			}
 			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+			    	generarQR();
+			    }
+			}
+		});
+	}
+	
+	private void cargarListenersArchivo()
+	{
+		archivo.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
