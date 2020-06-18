@@ -49,16 +49,18 @@ public class GenerarQR
 	
 	/**
 	 * Metodo para crear al codigo QR
+	 * @param archivoQR
+	 * @param archivoLogo
 	 * @param monto
 	 * @param idSubsidiaria
 	 * @param idTienda
 	 * @param idCajero
 	 * @param nombreCajero
 	 * @param idCaja
-	 * @return String
+	 * @return
 	 * @throws QRException
 	 */
-	public String generarCodigoQR(String monto, String idSubsidiaria, String idTienda, String idCajero, String nombreCajero, String idCaja) throws QRException
+	public String generarCodigoQR(String archivoQR, String archivoLogo, String monto, String idSubsidiaria, String idTienda, String idCajero, String nombreCajero, String idCaja) throws QRException
 	{
 		StringBuilder infoCodigoQR=new StringBuilder();
 		
@@ -84,7 +86,7 @@ public class GenerarQR
 		
 		LOG.info("Informacion Codigo QR... {}", String.valueOf(infoCodigoQR));
 		
-		crearArchivoQR(String.valueOf(infoCodigoQR), numeroTransaccion);
+		crearArchivoQR(String.valueOf(infoCodigoQR), numeroTransaccion, archivoQR, archivoLogo);
 		
 		return numeroTransaccion;
 	}
@@ -242,14 +244,16 @@ public class GenerarQR
 	/**
 	 * Metodo para crear el codigo QR
 	 * @param infoCodigoQR
+	 * @param archivoLogo
 	 * @param numeroTransaccion
-	 * @throws QRException 
+	 * @param archivoQR
+	 * @throws QRException
 	 */
-	private void crearArchivoQR(String infoCodigoQR, String numeroTransaccion) throws QRException
+	private void crearArchivoQR(String infoCodigoQR, String numeroTransaccion, String archivoQR, String archivoLogo) throws QRException
 	{
 		try {
-			File codigoQR = new File(numeroTransaccion.concat(ConstantesQR.WALMART));
-			ClassPathResource resource=new ClassPathResource(ConstantesQR.WALMART_LOGO);
+			File codigoQR = new File(numeroTransaccion.concat(ConstantesQR.GUION_BAJO).concat(archivoQR));
+			ClassPathResource resource=new ClassPathResource(archivoLogo);
 			QRCodeWriter writer = new QRCodeWriter();
 			
 			BitMatrix matrix = writer.encode(infoCodigoQR, BarcodeFormat.QR_CODE, 1200, 1200);
