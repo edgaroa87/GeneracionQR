@@ -66,7 +66,7 @@ public class GenerarQR
 		
 		LOG.info("Generando codigo QR");
 		
-		String referenciaUnica=generarReferencia(16);
+		String referenciaUnica=generarReferencia(21);
 		String numeroTransaccion=generarReferencia(5);
 		String hash=crearHash(referenciaUnica, monto, idSubsidiaria, numeroTransaccion);
 		String referenciaUnicaCifrada=cifraReferenciaUnica(referenciaUnica, numeroTransaccion);
