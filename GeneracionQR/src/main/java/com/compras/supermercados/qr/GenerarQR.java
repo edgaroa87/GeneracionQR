@@ -207,7 +207,7 @@ public class GenerarQR
 	        Cipher cipher = Cipher.getInstance(ConstantesQR.ALGORITMO_PADDING);
 	        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(nuevaLlave.getBytes()));
 	        
-	        return java.util.Base64.getEncoder().encodeToString(cipher.doFinal(referenciaUnica.getBytes(StandardCharsets.UTF_8)));
+	        return Base64.getEncoder().encodeToString(cipher.doFinal(referenciaUnica.getBytes(StandardCharsets.UTF_8)));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 			LOG.error(obtenerTrazaError(e));
 			throw new QRException("Error al cifrar la referencia unica.");
@@ -234,7 +234,7 @@ public class GenerarQR
 	        Cipher cipher = Cipher.getInstance(ConstantesQR.ALGORITMO_PADDING);
 	        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(nuevaLlave.getBytes()));
 	        
-	        LOG.info("Referencia unica descifrada... "+new String(cipher.doFinal(java.util.Base64.getDecoder().decode(textoCifrado)), StandardCharsets.UTF_8));
+	        LOG.info("Referencia unica descifrada... "+new String(cipher.doFinal(Base64.getDecoder().decode(textoCifrado)), StandardCharsets.UTF_8));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 			LOG.error(obtenerTrazaError(e));
 			throw new QRException("Error al descifrar la referencia unica.");
