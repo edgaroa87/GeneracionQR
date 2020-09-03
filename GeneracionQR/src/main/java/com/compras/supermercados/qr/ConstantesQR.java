@@ -9,7 +9,9 @@ import java.util.List;
  */
 public class ConstantesQR
 {
-	public static final String LLAVE_CIFRADO="B4NC0437EC4";
+	public static final String LLAVE_CIFRADO="WLTSb4z7EC4";//"B4NC0437EC4";
+	public static final String LLAVE_ACCESO="BEF208B35080E73E5FAC5413469DEAD566FD4433F8341421ECDF76F1DA76AFAA";
+	public static final String LLAVE_IV="79C9FA656EE1A0F4";
 	public static final String ID_COMERCIO="33";
 	public static final String ARCHIVO_LOGO="_logo.png";
 	public static final String ALGORITMO_HASH="SHA-512";
