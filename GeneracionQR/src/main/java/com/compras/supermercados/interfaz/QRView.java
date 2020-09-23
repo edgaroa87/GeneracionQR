@@ -378,7 +378,7 @@ public class QRView extends JFrame
 			String nuevoMonto=String.format(ConstantesQR.MONTO_DECIMALES, Double.valueOf(monto.getText())).replace(ConstantesQR.COMA, ConstantesQR.PUNTO);
 			String archivoLogo=String.valueOf(companiasLogos.getSelectedItem()).replace(ConstantesQR.ESPACIO, ConstantesQR.CADENA_VACIA).replace(ConstantesQR.COMILLA_SIMPLE, ConstantesQR.CADENA_VACIA).toLowerCase().concat(ConstantesQR.ARCHIVO_LOGO);
 			String archivoQR=String.valueOf(companiasLogos.getSelectedItem()).replace(ConstantesQR.ESPACIO, ConstantesQR.CADENA_VACIA).replace(ConstantesQR.COMILLA_SIMPLE, ConstantesQR.CADENA_VACIA).toLowerCase().concat(ConstantesQR.PUNTO_EXTENSION);
-			String numeroTransaccion=generarQR.generarCodigoQR(archivoQR, archivoLogo, nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText().toUpperCase(), idCaja.getText());
+			String numeroTransaccion=generarQR.generarCodigoQR(archivoQR, archivoLogo, nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText(), idCaja.getText());
 			cargarQR(numeroTransaccion, archivoQR);
 		}catch(QRException qre) {
 			JOptionPane.showMessageDialog(null, qre.getMensajeError(), ConstantesQR.ERROR_DIALOGO, JOptionPane.ERROR_MESSAGE);
@@ -391,7 +391,7 @@ public class QRView extends JFrame
 	 */
 	private void validarInformacionQR() throws QRException
 	{
-		if(generarQR.esNuloVacio(monto.getText()) || generarQR.esNuloVacio(subsidiaria.getText()) || generarQR.esNuloVacio(tienda.getText()) || generarQR.esNuloVacio(idCajero.getText()) || generarQR.esNuloVacio(cajero.getText()) || generarQR.esNuloVacio(idCaja.getText()))
+		if(generarQR.esNuloVacio(monto.getText()) || generarQR.esNuloVacio(subsidiaria.getText()) || generarQR.esNuloVacio(tienda.getText()) || generarQR.esNuloVacio(idCajero.getText()) || generarQR.esNuloVacio(idCaja.getText()))
 			throw new QRException("Complete la informaci\u00f3n para la generaci\u00f3n del c\u00f3digo QR.");
 	}
 	

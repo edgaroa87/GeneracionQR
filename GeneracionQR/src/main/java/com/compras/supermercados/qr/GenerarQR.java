@@ -79,7 +79,6 @@ public class GenerarQR
 		infoCodigoQR.append(idSubsidiaria).append("|");
 		infoCodigoQR.append(idTienda).append("|");
 		infoCodigoQR.append(idCajero).append("|");
-		infoCodigoQR.append(nombreCajero).append("|");
 		infoCodigoQR.append(idCaja).append("|");
 		infoCodigoQR.append(numeroTransaccion).append("|");
 		infoCodigoQR.append(hash);
@@ -195,7 +194,7 @@ public class GenerarQR
 	 */
 	private String cifraReferenciaUnica(String referenciaUnica, String numeroTransaccion) throws QRException
 	{
-		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO.concat(numeroTransaccion);
+		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO_WALMART.concat(numeroTransaccion);
 		
 		try {
 			LOG.info("Referencia unica a cifrar... {}", referenciaUnica);
@@ -223,7 +222,7 @@ public class GenerarQR
 	 */
 	private void descifraReferenciaUnica(String textoCifrado, String numeroTransaccion) throws QRException
 	{
-		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO.concat(numeroTransaccion);
+		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO_WALMART.concat(numeroTransaccion);
 		
 		try {
 			LOG.info("Antes de descifrar... {}", textoCifrado);
