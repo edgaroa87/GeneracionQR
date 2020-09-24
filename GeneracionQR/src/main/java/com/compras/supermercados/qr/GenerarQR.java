@@ -200,12 +200,14 @@ public class GenerarQR
 			LOG.info("Referencia unica a cifrar... {}", referenciaUnica);
 			LOG.info("Llave para cifrado... {}", nuevaLlave);
 			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ConstantesQR.ALGORITMO_SHA);
-	        KeySpec keySpec = new PBEKeySpec(ConstantesQR.LLAVE_ACCESO.toCharArray(), nuevaLlave.getBytes(), 65536, 256);
+	        //KeySpec keySpec = new PBEKeySpec(ConstantesQR.LLAVE_ACCESO.toCharArray(), nuevaLlave.getBytes(), 65536, 256);
+	        KeySpec keySpec = new PBEKeySpec(nuevaLlave.toCharArray(), nuevaLlave.getBytes(), 65536, 256);
 	        SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
 	        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getEncoded(), ConstantesQR.ALGORITMO_AES);
 	         
 	        Cipher cipher = Cipher.getInstance(ConstantesQR.ALGORITMO_PADDING);
-	        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(ConstantesQR.LLAVE_IV.getBytes()));
+	        //cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(ConstantesQR.LLAVE_IV.getBytes()));
+	        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(nuevaLlave.getBytes()));
 	        
 	        return Base64.getEncoder().encodeToString(cipher.doFinal(referenciaUnica.getBytes(StandardCharsets.UTF_8)));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
@@ -228,12 +230,14 @@ public class GenerarQR
 			LOG.info("Antes de descifrar... {}", textoCifrado);
 			LOG.info("Llave para descifrar... {}", nuevaLlave);
 	        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ConstantesQR.ALGORITMO_SHA);
-	        KeySpec keySpen = new PBEKeySpec(ConstantesQR.LLAVE_ACCESO.toCharArray(), nuevaLlave.getBytes(), 65536, 256);
+	        //KeySpec keySpen = new PBEKeySpec(ConstantesQR.LLAVE_ACCESO.toCharArray(), nuevaLlave.getBytes(), 65536, 256);
+	        KeySpec keySpen = new PBEKeySpec(nuevaLlave.toCharArray(), nuevaLlave.getBytes(), 65536, 256);
 	        SecretKey secretKey = secretKeyFactory.generateSecret(keySpen);
 	        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getEncoded(), ConstantesQR.ALGORITMO_AES);
 	         
 	        Cipher cipher = Cipher.getInstance(ConstantesQR.ALGORITMO_PADDING);
-	        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(ConstantesQR.LLAVE_IV.getBytes()));
+	        //cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(ConstantesQR.LLAVE_IV.getBytes()));
+	        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(nuevaLlave.getBytes()));
 	        
 	        LOG.info("Referencia unica descifrada... "+new String(cipher.doFinal(Base64.getDecoder().decode(textoCifrado)), StandardCharsets.UTF_8));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
