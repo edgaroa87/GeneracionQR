@@ -60,7 +60,7 @@ public class GenerarQR
 	 * @return
 	 * @throws QRException
 	 */
-	public String generarCodigoQR(String archivoQR, String archivoLogo, String monto, String idSubsidiaria, String idTienda, String idCajero, String nombreCajero, String idCaja) throws QRException
+	public String generarCodigoQR(String comercio, String archivoQR, String archivoLogo, String monto, String idSubsidiaria, String idTienda, String idCajero, String nombreCajero, String idCaja) throws QRException
 	{
 		StringBuilder infoCodigoQR=new StringBuilder();
 		
@@ -69,13 +69,16 @@ public class GenerarQR
 		String referenciaUnica=generarReferencia(21);
 		String numeroTransaccion=generarReferencia(5);
 		String hash=crearHash(referenciaUnica, monto, idSubsidiaria, numeroTransaccion);
-		String referenciaUnicaCifrada=cifraReferenciaUnica(referenciaUnica, numeroTransaccion);
+		String referenciaUnicaCifrada=cifraReferenciaUnica(comercio, referenciaUnica, numeroTransaccion);
 		
-		descifraReferenciaUnica(referenciaUnicaCifrada, numeroTransaccion);
+		descifraReferenciaUnica(comercio, referenciaUnicaCifrada, numeroTransaccion);
 		
 		infoCodigoQR.append(referenciaUnicaCifrada).append("|");
 		infoCodigoQR.append(monto).append("|");
-		infoCodigoQR.append(ConstantesQR.ID_COMERCIO).append("|");
+		if(comercio.equalsIgnoreCase(ConstantesQR.COMERCIO_SORIANA))
+			infoCodigoQR.append(ConstantesQR.ID_COMERCIO_SORIANA).append("|");
+		else
+			infoCodigoQR.append(ConstantesQR.ID_COMERCIO_WALMART).append("|");
 		infoCodigoQR.append(idSubsidiaria).append("|");
 		infoCodigoQR.append(idTienda).append("|");
 		infoCodigoQR.append(idCajero).append("|");
@@ -192,9 +195,14 @@ public class GenerarQR
 	 * @return String
 	 * @throws QRException
 	 */
-	private String cifraReferenciaUnica(String referenciaUnica, String numeroTransaccion) throws QRException
+	private String cifraReferenciaUnica(String comercio, String referenciaUnica, String numeroTransaccion) throws QRException
 	{
-		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO_WALMART.concat(numeroTransaccion);
+		String nuevaLlave;
+		
+		if(comercio.equalsIgnoreCase(ConstantesQR.COMERCIO_SORIANA))
+			nuevaLlave=ConstantesQR.LLAVE_CIFRADO_SORIANA.concat(numeroTransaccion);
+		else
+			nuevaLlave=ConstantesQR.LLAVE_CIFRADO_WALMART.concat(numeroTransaccion);
 		
 		try {
 			LOG.info("Referencia unica a cifrar... {}", referenciaUnica);
@@ -222,9 +230,14 @@ public class GenerarQR
 	 * @param numeroTransaccion
 	 * @throws QRException 
 	 */
-	private void descifraReferenciaUnica(String textoCifrado, String numeroTransaccion) throws QRException
+	private void descifraReferenciaUnica(String comercio, String textoCifrado, String numeroTransaccion) throws QRException
 	{
-		String nuevaLlave=ConstantesQR.LLAVE_CIFRADO_WALMART.concat(numeroTransaccion);
+		String nuevaLlave;
+		
+		if(comercio.equalsIgnoreCase(ConstantesQR.COMERCIO_SORIANA))
+			nuevaLlave=ConstantesQR.LLAVE_CIFRADO_SORIANA.concat(numeroTransaccion);
+		else
+			nuevaLlave=ConstantesQR.LLAVE_CIFRADO_WALMART.concat(numeroTransaccion);
 		
 		try {
 			LOG.info("Antes de descifrar... {}", textoCifrado);

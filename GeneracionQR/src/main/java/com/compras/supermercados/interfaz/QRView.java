@@ -61,7 +61,7 @@ public class QRView extends JFrame
 		setResizable(false);
 		setBounds(0, 0, 550, 345);
 		setLocationRelativeTo(null);
-		setTitle("QR Comercios Walmart");
+		setTitle("QR Comercios Walmart/Soriana");
 		getContentPane().setLayout(null);
 		etiquetas();
 		cargarTextFields();
@@ -378,7 +378,7 @@ public class QRView extends JFrame
 			String nuevoMonto=String.format(ConstantesQR.MONTO_DECIMALES, Double.valueOf(monto.getText())).replace(ConstantesQR.COMA, ConstantesQR.PUNTO);
 			String archivoLogo=String.valueOf(companiasLogos.getSelectedItem()).replace(ConstantesQR.ESPACIO, ConstantesQR.CADENA_VACIA).replace(ConstantesQR.COMILLA_SIMPLE, ConstantesQR.CADENA_VACIA).toLowerCase().concat(ConstantesQR.ARCHIVO_LOGO);
 			String archivoQR=String.valueOf(companiasLogos.getSelectedItem()).replace(ConstantesQR.ESPACIO, ConstantesQR.CADENA_VACIA).replace(ConstantesQR.COMILLA_SIMPLE, ConstantesQR.CADENA_VACIA).toLowerCase().concat(ConstantesQR.PUNTO_EXTENSION);
-			String numeroTransaccion=generarQR.generarCodigoQR(archivoQR, archivoLogo, nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText(), idCaja.getText());
+			String numeroTransaccion=generarQR.generarCodigoQR(idComercio(), archivoQR, archivoLogo, nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText(), idCaja.getText());
 			cargarQR(numeroTransaccion, archivoQR);
 		}catch(QRException qre) {
 			JOptionPane.showMessageDialog(null, qre.getMensajeError(), ConstantesQR.ERROR_DIALOGO, JOptionPane.ERROR_MESSAGE);
@@ -417,5 +417,18 @@ public class QRView extends JFrame
 		} catch (IOException e) {
 			LOG.error(generarQR.obtenerTrazaError(e));
 		}
+	}
+	
+	/**
+	 * Obtiene el id de comercio que solicita el QR
+	 * @return int
+	 */
+	private String idComercio()
+	{
+		
+		if(companiasLogos.getSelectedIndex()==4 || companiasLogos.getSelectedIndex()==5 || companiasLogos.getSelectedIndex()==6)
+			return ConstantesQR.COMERCIO_SORIANA;
+		
+		return ConstantesQR.COMERCIO_WALMART;
 	}
 }
