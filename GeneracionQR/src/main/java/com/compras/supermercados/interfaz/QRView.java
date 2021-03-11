@@ -51,6 +51,8 @@ public class QRView extends JFrame
 	
 	@SuppressWarnings("rawtypes")
 	private JComboBox companiasLogos;
+	@SuppressWarnings("rawtypes")
+	private JComboBox ambienteQR;
 
 	/**
 	 * Create the frame.
@@ -84,8 +86,12 @@ public class QRView extends JFrame
 		LOG.info("Cargando labels...");
 		
 		JLabel logoSucursal = new JLabel("Sucursal logo");
-		logoSucursal.setBounds(27, 30, 100, 15);
+		logoSucursal.setBounds(34, 30, 100, 15);
 		getContentPane().add(logoSucursal);
+		
+		JLabel tipoQR = new JLabel("Tipo QR");
+		tipoQR.setBounds(330, 30, 100, 15);
+		getContentPane().add(tipoQR);
 		
 		JLabel labelMonto = new JLabel("Monto");
 		labelMonto.setBounds(78, 60, 45, 15);
@@ -125,8 +131,12 @@ public class QRView extends JFrame
 		LOG.info("Cargando text fileds...");
 		
 		companiasLogos = new JComboBox(ConstantesQR.LISTACOMPAÑIAS.toArray());
-		companiasLogos.setBounds(144, 24, 165, 23);
+		companiasLogos.setBounds(144, 27, 165, 23);
 		getContentPane().add(companiasLogos);
+		
+		ambienteQR=new JComboBox(ConstantesQR.AMBIENTES.toArray());
+		ambienteQR.setBounds(390, 27, 150, 23);
+		getContentPane().add(ambienteQR);
 		
 		monto = new JTextField();
 		monto.setBounds(144, 58, 114, 19);
@@ -171,6 +181,15 @@ public class QRView extends JFrame
 	private void cargarListenerCombo()
 	{
 		companiasLogos.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
+			    	generarQR();
+			    }
+			}
+		});
+		
+		ambienteQR.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 			    if (e.getKeyCode()==KeyEvent.VK_ENTER){
@@ -378,7 +397,7 @@ public class QRView extends JFrame
 			String nuevoMonto=String.format(ConstantesQR.MONTO_DECIMALES, Double.valueOf(monto.getText())).replace(ConstantesQR.COMA, ConstantesQR.PUNTO);
 			String archivoLogo=String.valueOf(companiasLogos.getSelectedItem()).replace(ConstantesQR.ESPACIO, ConstantesQR.CADENA_VACIA).replace(ConstantesQR.COMILLA_SIMPLE, ConstantesQR.CADENA_VACIA).toLowerCase().concat(ConstantesQR.ARCHIVO_LOGO);
 			String archivoQR=String.valueOf(companiasLogos.getSelectedItem()).replace(ConstantesQR.ESPACIO, ConstantesQR.CADENA_VACIA).replace(ConstantesQR.COMILLA_SIMPLE, ConstantesQR.CADENA_VACIA).toLowerCase().concat(ConstantesQR.PUNTO_EXTENSION);
-			String numeroTransaccion=generarQR.generarCodigoQR(idComercio(), archivoQR, archivoLogo, nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText(), idCaja.getText());
+			String numeroTransaccion=generarQR.generarCodigoQR(idComercio(), archivoQR, archivoLogo, nuevoMonto, subsidiaria.getText(), tienda.getText(), idCajero.getText(), cajero.getText(), idCaja.getText(), ambienteQR.getSelectedItem().toString());
 			cargarQR(numeroTransaccion, archivoQR);
 		}catch(QRException qre) {
 			JOptionPane.showMessageDialog(null, qre.getMensajeError(), ConstantesQR.ERROR_DIALOGO, JOptionPane.ERROR_MESSAGE);

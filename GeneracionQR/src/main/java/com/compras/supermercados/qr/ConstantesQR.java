@@ -9,10 +9,10 @@ import java.util.List;
  */
 public class ConstantesQR
 {
-	public static final String LLAVE_CIFRADO_WALMART="WLTSb4z7EC4"; //WLTpR4z7EC4 -> Produccion;
-	public static final String LLAVE_CIFRADO_SORIANA="SRNsxAzt3Ca"; //SRNP0Azt3Ca -> Produccion
-//	public static final String LLAVE_ACCESO="BEF208B35080E73E5FAC5413469DEAD566FD4433F8341421ECDF76F1DA76AFAA";
-//	public static final String LLAVE_IV="79C9FA656EE1A0F4";
+	public static final String LLAVE_CIFRADO_WALMART="WLTSb4z7EC4";
+	public static final String LLAVE_CIFRADO_SORIANA="SRNsxAzt3Ca";
+	public static final String LLAVE_CIFRADO_WALMART_PRODUCCION="WLTpR4z7EC4";
+	public static final String LLAVE_CIFRADO_SORIANA_PRODUCCION="SRNP0Azt3Ca";
 	public static final String ID_COMERCIO_WALMART="33";
 	public static final String ID_COMERCIO_SORIANA="55";
 	public static final String COMERCIO_WALMART="WALMART";
@@ -25,6 +25,8 @@ public class ConstantesQR
 	public static final String EXTENSION_QR="png";
 	public static final String ERROR_DIALOGO="Error en la operaci\u00f3n";
 	public static final List<String> LISTACOMPAÑIAS=Arrays.asList("Bodega Aurrera", "Sam's Club", "Superama", "Walmart", "Soriana (Hiper, Mega, Super, Mercado, Express)", "City Club", "Super City");
+	public static final List<String> AMBIENTES=Arrays.asList("Desarrollo", "Producción");
+	public static final String AMBIENTE_DESARROLLO="Desarrollo";
 	public static final String MONTO_DECIMALES="%.2f";
 	public static final String ESPACIO=" ";
 	public static final String CADENA_VACIA="";
